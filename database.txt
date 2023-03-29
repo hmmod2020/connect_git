@@ -1,0 +1,727 @@
+//// -- LEVEL 1
+//// -- Schemas, Tables and References
+
+// Creating tables
+// You can define the tables with full schema names
+
+//0
+Table Tsystems_number as sys{
+  system_num int pk 
+  system_name string 
+}
+//0
+
+ //1
+ Table Tstate as Ts{
+  state_num int pk 
+  state_name string
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int 
+}
+ //1
+
+  //2
+Table Tdistricts as Td{
+  state_num int [ref: > Ts.state_num]
+  qlst_num int pk 
+  qlst_name string 
+  system_num int  [ref: > sys.system_num]
+  entry_date date 
+  user_num int 
+}
+ //2
+
+  //3
+Table Tcities as Tc{
+  state_num int  [ref: > Ts.state_num]
+  qlst_num int [ref: > Td.qlst_num]
+  city_num int pk  
+  city_name string
+  system_num int  [ref: > sys.system_num]
+  entry_date date 
+  user_num int 
+}
+ //3
+
+  //4
+Table Tstores as store{
+state_num int [ref: > Ts.state_num]
+qlst_num int  [ref: > Td.qlst_num ]
+city_num int  [ref: > Tc.city_num]
+sto_num int pk
+sto_name string
+system_num int [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+ //4
+
+  //5
+Table Tunits_meas as units{
+unit_num int pk
+unit_name string
+system_num int  [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+ //5
+
+  //6
+Table Tmain_group as mg{
+main_num int pk
+main_name string
+system_num int  [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+ //6
+
+  //7
+Table Tsub_group as sg{
+main_num int [ref: > mg.main_num]
+sub_num int pk 
+sub_name string
+system_num int  [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+ //7
+
+ //8
+Table Items as Item{
+main_num int [ref: > mg.main_num]
+sub_num int [ref: > sg.sub_num] 
+item_num int pk 
+item_name string 
+unit_num int [ref: > units.unit_num] 
+system_num int  [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+ //8
+ //9
+Table Tcontainers as count{
+cont_num int pk 
+count_name string 
+system_num int  [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//9
+
+//10
+Table Tmain_actcts as Ta{
+main_acct_num int pk 
+main_acct_name string 
+system_num int  [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//10
+//11
+Table Tgen_ledger as Tl{
+main_acct_num int [ref: > Ta.main_acct_num]
+gen_num int pk 
+gen_name string  
+system_num int  [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//11 
+//12
+Table Tsub_ledger as Tl2{
+main_acct_num int [ref: > Ta.main_acct_num]
+gen_num int [ref: > Tl.gen_num] 
+sub_gen_num int pk 
+sub_gen_name string
+system_num int [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//12
+//13
+Table Titems_accts as Tactss{
+main_acct_num int [ref: > Ta.main_acct_num]
+gen_num int [ref: > Tl.gen_num] 
+sub_gen_num int [ref: > Tl2.sub_gen_num] 
+item_num int pk 
+item_name string
+system_num int [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//13
+//14
+Table Tbank as Bank{
+bank_num int pk
+bank_name string 
+system_num int [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//14
+//15
+Table Tbank_barnch as branch{
+bank_num int [ref: > Bank.bank_num]
+barnch_num int pk 
+branch_name string 
+system_num int [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//15
+//16
+Table Tcountry as Cn{
+coun_num int pk 
+coun_name string 
+system_num int [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//16
+//17
+Table Tcompanies as comp{
+coun_num int [ref: > Cn.coun_num]
+comp_num int pk 
+comp_name string   
+system_num int [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//17
+//18
+Table Tcustomer_type as type{
+cus_type_num int pk 
+cus_type_name string  
+system_num int [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//18
+//19
+Table Tcustomers as cus{
+cus_num int pk 
+cus_name string 
+gender int 
+telephone string 
+loc_lan string 
+loc_log string 
+cus_type_num int [ref: > type.cus_type_num]
+coun_num int [ref: > Cn.coun_num]
+comp_num int [ref: > comp.comp_num]
+system_num int [ref: > sys.system_num]
+in_date date 
+sta_num int [ref: > Ts.state_num]
+qlst_num int [ref: > Td.qlst_num]
+city_num int [ref: > Tc.city_num]
+entry_date date 
+user_num int
+}
+//19
+//20
+Table Treceivers  as reseiver{
+rece_num int pk 
+rece_name string   
+system_num int [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//20
+//21
+Table Tstore_resp as resp {
+  resp_num int pk 
+  recp_name string 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//21
+//22
+Table Tret_orders_reasons as tret{
+  ret_reas_num int pk 
+  ret_reas_name string 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//22
+
+//23
+Table Tdamage_reas as damegR{
+  qam_num int pk 
+  qam_name string 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//23
+//24
+Table Tend_reas as end{
+  end_num int pk 
+  end_name  string 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//24
+//25
+Table Tcus_bal_points{
+  cus_num int pk [ref: > cus.cus_num]
+  balance int 
+  end_name  string 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//25
+//26
+Table Tperchare_comp as Tcomp{
+  purch_date date
+  cus_num int [ref: > cus.cus_num]
+  serial int pk 
+  rece_num int [ref: > reseiver.rece_num]
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//26
+//27
+Table Tperchare_detail{
+  purch_date date
+  cus_num int [ref: > cus.cus_num]
+  serial int [ref: > Tcomp.serial]
+  main_num int [ref: > mg.main_num]
+  sub_num int [ref: > sg.sub_num]
+  item_num int [ref: > Item.item_num]
+  count_num int [ref: > count.cont_num] 
+  rece_num int [ref: > reseiver.rece_num]
+  count_tot int 
+  count_in int 
+  count_price int 
+  unit_price int 
+  prod_date date
+  exp_date date
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//27
+//28
+Table Tperchare_orders as Ot{
+  order_num int pk 
+  odrder_date date
+  cus_num int [ref: > cus.cus_num]
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//28
+//29
+Table Tperchare_orders_details{
+  order_num int [ref: > Ot.order_num]
+  odrder_date date
+  main_num int [ref: > mg.main_num]
+  sub_num int [ref: > sg.sub_num]
+  item_num int [ref: > Item.item_num]
+  count_num int [ref: > count.cont_num] 
+  count_tot int 
+  count_in int 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//29
+//30
+Table Tret_orders{
+  order_num int [ref: > Ot.order_num]
+  odrder_date date
+  main_num int [ref: > mg.main_num]
+  sub_num int [ref: > sg.sub_num]
+  item_num int [ref: > Item.item_num]
+  count_num int [ref: > count.cont_num] 
+  ret_date date 
+  ret_time time
+  count_ret int 
+  ret_reas_num int [ref: > tret.ret_reas_num]
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//30
+//31
+Table Tbatches as batches{
+  batch_num int pk
+  batch_date date 
+  main_num int [ref: > mg.main_num]
+  sub_num int [ref: > sg.sub_num]
+  item_num int [ref: > Item.item_num]
+  prod_date date
+  exp_date date 
+  count_num int [ref: > count.cont_num]
+  balance int  
+  sta_num int [ref: > Ts.state_num]
+  plst_num int [ref: > Td.qlst_num] 
+  city_num int [ref: > Tc.city_num]
+  sto_num int [ref: > store.sto_num]
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//31
+//32
+Table Tperchare_exec{
+  order_num int [ref: > Ot.order_num]
+  odrder_date date
+  main_num int [ref: > mg.main_num]
+  sub_num int [ref: > sg.sub_num]
+  item_num int [ref: > Item.item_num]
+  count_num int [ref: > count.cont_num] 
+  exec_date date 
+  exec_time time
+  count_tot int  
+  batches_num int [ref: > batches.batch_num]
+  batches_date date
+  count_price int 
+  unit_price int 
+  cont_int int 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//32
+//33
+Table Tdamage_items{
+  Tran_date date
+  sto_num int [ref: > store.sto_num]
+  main_num int [ref: > mg.main_num]
+  sub_num int [ref: > sg.sub_num]
+  item_num int [ref: > Item.item_num]
+  qam_num int [ref: > damegR.qam_num]
+  batches_num int [ref: > batches.batch_num]
+  batches_date date
+  count_num int [ref: > count.cont_num] 
+  balance int 
+  sta_num int [ref: > Ts.state_num]
+  plst_num int [ref: > Td.qlst_num] 
+  city_num int [ref: > Tc.city_num]
+  count_in int  
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//33
+//34
+Table Ttransfer{
+  Tran_date date
+  main_num int [ref: > mg.main_num]
+  sub_num int [ref: > sg.sub_num]
+  item_num int [ref: > Item.item_num]
+  sto_num_1 int [ref: > store.sto_num]
+  serial int 
+  sto_num_2 int [ref: > store.sto_num]
+  batches_num int [ref: > batches.batch_num]
+  batches_date date
+  count_num int [ref: > count.cont_num]
+  count_tot int  
+  count_in int 
+  sta_num1 int [ref: > Ts.state_num]
+  plst_num1 int [ref: > Td.qlst_num] 
+  city_num1 int [ref: > Tc.city_num] 
+  sta_num2 int [ref: > Ts.state_num]
+  plst_num2 int [ref: > Td.qlst_num] 
+  city_num2 int [ref: > Tc.city_num]
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//34
+//35
+Table Tdeposits{
+  Tran_date date
+  cus_num int [ref: > cus.cus_num]
+  serial int 
+  tran_type int
+  value int
+  crdit_type int
+  balance int 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//35
+//36
+Table Tstore_in_out{
+  Tran_date date
+  sto_num int [ref: > store.sto_num]
+  main_num int [ref: > mg.main_num]
+  sub_num int [ref: > sg.sub_num]
+  item_num int [ref: > Item.item_num]
+  serial int 
+  tran_type int 
+  quantity int 
+  price int
+  tran_value int 
+  batches_date date 
+  batches_num int [ref: > batches.batch_num]
+  quant_balance int 
+  value_balance int 
+  cus_num int [ref: > cus.cus_num]
+  cus_type int [ref: > type.cus_type_num]
+  count_num int [ref: > count.cont_num]
+  count_tot int  
+  count_in int 
+  count_price int 
+  rece_num int [ref: > reseiver.rece_num]
+  sta_num int [ref: > Ts.state_num]
+  plst_num int [ref: > Td.qlst_num] 
+  city_num int [ref: > Tc.city_num] 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//36
+//37
+Table Tcus_points{
+  Tran_date date
+  cus_num int [ref: > cus.cus_num]
+  serial int 
+  tran_type int  
+  value int
+  points_tot int 
+  balance int 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//37
+//38
+Table Tdebit_items{
+Tran_date date
+main_acct_num int [ref: > Ta.main_acct_num]
+gen_num int [ref: > Tl.gen_num] 
+sub_gen_num int [ref: > Tl2.sub_gen_num] 
+item_num int [ref: > Tactss.item_num]
+serial int 
+value int
+balance int  
+system_num int [ref: > sys.system_num]
+entry_date date 
+user_num int
+}
+//38
+//39
+Table Titems_price{
+  Tran_date date
+  sto_num int [ref: > store.sto_num]
+  main_num int [ref: > mg.main_num]
+  sub_num int [ref: > sg.sub_num]
+  item_num int [ref: > Item.item_num]
+  count_num int [ref: > count.cont_num]
+  count_in int 
+  count_price int
+  unit_price int
+  sta_num int [ref: > Ts.state_num]
+  plst_num int [ref: > Td.qlst_num] 
+  city_num int [ref: > Tc.city_num] 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//39
+//40
+Table Titems_limits{
+  Tran_date date
+  sto_num int [ref: > store.sto_num]
+  main_num int [ref: > mg.main_num]
+  sub_num int [ref: > sg.sub_num]
+  item_num int [ref: > Item.item_num]
+  low_limit int 
+  hight_limit int 
+  sta_num int [ref: > Ts.state_num]
+  plst_num int [ref: > Td.qlst_num] 
+  city_num int [ref: > Tc.city_num]
+  count_num int [ref: > count.cont_num]
+  count_in int    
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//40
+//41
+Table Tstore_assign{
+  sto_num int [ref: > store.sto_num]
+  recp_name int [ref: > resp.recp_name]
+  recp_date date
+  sta_num int [ref: > Ts.state_num]
+  plst_num int [ref: > Td.qlst_num] 
+  city_num int [ref: > Tc.city_num] 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//41
+//42
+Table Tbank_accts as bac{
+  bank_num int [ref: > Bank.bank_num]
+  barnch_num int [ref: > branch.barnch_num]
+  acct_num int pk 
+  acct_name string 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//42
+//43
+Table Tcus_ishaarat as ishaarat{
+  cus_num int [ref: > cus.cus_num]
+  bank_num int [ref: > Bank.bank_num]
+  barnch_num int [ref: > branch.barnch_num]
+  acct_num int pk
+  ish_num int 
+  ish_date date
+  bank_num_comp int [ref: > Bank.bank_num]
+  barnch_num_comp int [ref: > branch.barnch_num]
+  acct_num_comp int [ref: > bac.acct_num]
+  value int 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//43
+//44
+Table Tsend_ishaarat{
+  cus_num int [ref: > cus.cus_num]
+  bank_num int [ref: > Bank.bank_num]
+  barnch_num int [ref: > branch.barnch_num]
+  acct_num int [ref: > ishaarat.acct_num]
+  ish_num int [ref: > ishaarat.ish_num]
+  ish_date date [ref: > ishaarat.ish_date]
+  send_date date
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//44
+//45
+Table Tinvesments as invesment{
+  cus_num int [ref: > cus.cus_num]
+  oper_num int pk
+  oper_date date
+  value int 
+  share_value int 
+  share_tot int 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//45
+//46
+Table Toperations_profit{
+  cus_num int [ref: > cus.cus_num]
+  oper_num int [ref: > invesment.oper_num]
+  oper_date date [ref: > invesment.oper_date]
+  profit_date date
+  share_profit int 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+  }
+//46
+//47
+Table Tprofit_payments{
+  cus_num int [ref: > cus.cus_num]
+  oper_num int [ref: > invesment.oper_num]
+  oper_date date [ref: > invesment.oper_date]
+  profit_date date
+  pay_date date 
+  value int 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+  }
+//47
+//48
+Table Tended_operations{
+  cus_num int [ref: > cus.cus_num]
+  oper_num int [ref: > invesment.oper_num]
+  oper_date date [ref: > invesment.oper_date]
+  end_date date 
+  end_num int [ref: > end.end_num]
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+  }
+//48
+//49
+Table Theadings{
+  head_num int pk 
+  head_name string 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+  }
+//49
+//50
+Table Tmessages{
+  mess_num int pk 
+  mess_content string 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+  }
+//50
+//51
+Table Tpriv as priv{
+  priv_num int pk 
+  priv_name string 
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+  }
+//51
+//52
+Table Tusers as us{
+  user_id string pk 
+  user_name string  
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+  }
+//52
+//53
+Table Tusers_priv{
+  user_id string [ref: > us.user_id]
+  priv_num int [ref: > priv.priv_num]
+  priv_data date
+  user_name string  
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+  }
+//53
+//54
+Table Tpoints_policy{
+  user_id string [ref: > us.user_id]
+  start_data date
+  initial_value int 
+  points_tot int 
+  ratio_initial int 
+  end_date date
+  points_value int  
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+  }
+//54
+//55
+Table Tfamily_trans{
+  cus_num int [ref: > cus.cus_num]
+  Tran_date date
+  serial int 
+  tran_value int  
+  system_num int [ref: > sys.system_num]
+  entry_date date 
+  user_num int
+}
+//55
